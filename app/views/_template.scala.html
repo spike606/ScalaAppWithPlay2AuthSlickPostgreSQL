@@ -32,6 +32,7 @@
                 <div class="top-bar-right">
                     <ul class="menu">
                     @if(account.isEmpty) {
+                        <li><a href="@routes.PublicApplication.signUp()" class="button success">Sign up</a></li>
                         <li><a href="@routes.Authentication.login()" class="button success">Login</a></li>
                     } else {
                         <li><a href="@routes.RestrictedApplication.account()" title="Edit Your Account">Hello <strong>@account.get.data.name</strong>!</a></li>
