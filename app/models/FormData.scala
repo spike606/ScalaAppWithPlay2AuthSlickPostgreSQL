@@ -1,7 +1,10 @@
 package models
 
-import play.api.data.{Mapping, Form}
+import play.api.data.{Form, Mapping}
 import play.api.data.Forms._
+import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
+
+import scala.util.matching.Regex
 
 case class FormDataLogin(email: String, password: String)
 
@@ -22,6 +25,7 @@ object FormData {
       "tags" -> text
     )(Message.formApply)(Message.formUnapply)
   )
+  val atLeastOneUpperLetterAndAtLeasOneSpecialChar = """(?=.*[A-Z])(?=.*[@#$%^&+=]).*"""
 
   private[this] def accountForm(passwordMapping:Mapping[String]) = Form(
     mapping(
@@ -34,5 +38,10 @@ object FormData {
 
   val updateAccount = accountForm(text)
 
-  val addAccount = accountForm(nonEmptyText)
+  val addAccount = accountForm(text
+    .verifying("Password must have from 5 to 10 chars", text => text.length() >= 5 && text.length() <= 10 && !text.contains("\\s"))
+    .verifying("Password must have at least one special char (@#$%^&+=) and one uppercase letter",
+        name => name.matches(atLeastOneUpperLetterAndAtLeasOneSpecialChar)))
+
+
 }
