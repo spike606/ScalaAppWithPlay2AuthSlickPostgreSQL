@@ -20,7 +20,7 @@ class RestrictedApplication @Inject()(val database: DBService, implicit val webJ
   extends Controller with AuthConfigTrait with AuthElement {
 
   def messages() = AsyncStack(AuthorityKey -> AccountRole.normal) { implicit request =>
-    database.runAsync(Tables.Message.sortBy(_.id).result).map { rowSeq =>
+    database.runAsync(Tables.Message.filter(_.accountId === loggedIn.id).result).map { rowSeq =>
       val messageSeq = rowSeq.map(Message(_))
       Ok(views.html.messages(loggedIn, messageSeq, FormData.addMessage))
     }
@@ -38,7 +38,19 @@ class RestrictedApplication @Inject()(val database: DBService, implicit val webJ
       formWithErrors => Future.successful(Redirect(routes.RestrictedApplication.messages())),
       message => {
         database.runAsync((Tables.Message returning Tables.Message.map(_.id)) += message.toRow()).map { id =>
-          Logger.info(s"Inserted message#$id by ${loggedIn.data.email}")
+
+          val update = {
+            val q = for {
+              row <- Tables.Message if row.id === id
+            } yield (row.accountId)
+            q.update(loggedIn.id)
+          }
+
+          database.runAsync(update).map { _ =>
+            Logger.info("Updated accounId")
+          }
+
+          Logger.info(s"Inserted message#$id by ${loggedIn.data.email} wirh id ${loggedIn.id}")
           Redirect(routes.RestrictedApplication.messages())
         }
       }

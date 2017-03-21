@@ -23,13 +23,14 @@ object Account {
   }
 }
 
-case class Message(content:String, tagSet:Set[String]) {
+case class Message(content:String, tagSet:Set[String], accountId: Int) {
   def toRow() = {
     val now = OffsetDateTime.now()
     Tables.MessageRow(
       id = -1,
       content = content,
       tagList = tagSet.toList,
+      accountId = accountId,
       createdAt = now,
       updatedAt = now
     )
@@ -42,7 +43,8 @@ object Message {
       id = row.id,
       data = Message(
         content = row.content,
-        tagSet = row.tagList.toSet
+        tagSet = row.tagList.toSet,
+        accountId = row.accountId
       )
     )
   }
@@ -50,7 +52,8 @@ object Message {
   def formApply(content:String, tags:String):Message = {
     Message(
       content = content.trim,
-      tagSet = tags.split(",").map(_.trim).filterNot(_.isEmpty).toSet
+      tagSet = tags.split(",").map(_.trim).filterNot(_.isEmpty).toSet,
+      accountId = -1
     )
   }
 
