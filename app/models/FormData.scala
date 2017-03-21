@@ -10,7 +10,7 @@ case class FormDataLogin(email: String, password: String)
 
 case class FormDataAccount(name:String, email: String, password: String, passwordAgain:String)
 
-object FormData {
+object FormData  {
 
   val login = Form(
     mapping(

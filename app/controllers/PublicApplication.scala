@@ -8,7 +8,7 @@ import models.db.{AccountRole, Tables}
 import models.{FormData, FormDataAccount, Message}
 import play.api.Logger
 import jp.t2v.lab.play2.auth._
-
+import org.postgresql.util.PSQLException
 import play.api.mvc.Controller
 import services.db.DBService
 import utils.db.TetraoPostgresDriver.api._
@@ -46,6 +46,15 @@ class PublicApplication @Inject()(val database: DBService, implicit val webJarAs
           database.runAsync((Tables.Account returning Tables.Account.map(_.id)) += row).map { id =>
             Logger.info(s"Inserted account#$id")
             Redirect(routes.Authentication.login())
+          }
+            .recover{
+//            case e: PSQLException if(e.getSQLState() == "23505") => Redirect(routes.PublicApplication.signUp())
+//                                                                    .flashing("doesUserExists" -> "User identified by this email already exists!")
+              case e: PSQLException if(e.getSQLState() == "23505") => {
+                val form = FormData.addAccount.fill(accountFormData).withError("userExists", "User identified by this email already exists!")
+                BadRequest(views.html.signup(loggedIn, form))
+              }
+            case e: Exception => InternalServerError("Exception - Something happened..")
           }
         } else {
           val form = FormData.addAccount.fill(accountFormData).withError("passwordAgain", "Passwords don't match")

@@ -1,4 +1,4 @@
-@(account: Option[Entity[Account]], accountForm:Form[FormDataAccount])(implicit webJarAssets: WebJarAssets)
+@(account: Option[Entity[Account]], accountForm:Form[FormDataAccount])(implicit webJarAssets: WebJarAssets, flash: Flash)
 @_template(account) {
     @defining(
         ("Sign up", routes.PublicApplication.signUpAddAccount(), "Sign up")
@@ -18,7 +18,11 @@
         <div class="row column">
             <label>Email
                 <input type="email" name="email" value="@accountForm("email").value" placeholder="email" required>
+                @*<span class="form-error is-visible">@flash.get("doesUserExists").getOrElse("")</span>*@
                 @accountForm.error("email").map { formError =>
+                    <span class="form-error is-visible">@formError.message</span>
+    }
+                @accountForm.error("userExists").map { formError =>
                     <span class="form-error is-visible">@formError.message</span>
                 }
             </label>
