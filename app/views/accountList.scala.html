@@ -1,0 +1,24 @@
+@(account: Option [Entity[Account]], accountSeq:Seq[Entity[Account]])(implicit webJarAssets: WebJarAssets)
+@_template(account) {
+    <div class="row column">
+        <h2>List of accounts</h2>
+    </div>
+    <div class="row column">
+        <table class="stack">
+            <thead>
+                <tr>
+                    <th width="60%">Name</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(account <- accountSeq) {
+                    <tr>
+                        <td>@account.data.name</td>
+                        <td>@account.data.email</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

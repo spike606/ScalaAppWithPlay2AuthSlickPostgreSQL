@@ -5,7 +5,7 @@ import javax.inject.{Inject, Singleton}
 
 import com.github.t3hnar.bcrypt.Password
 import models.db.{AccountRole, Tables}
-import models.{FormData, FormDataAccount, Message}
+import models.{FormData, FormDataAccount, Account}
 import play.api.Logger
 import jp.t2v.lab.play2.auth._
 import org.postgresql.util.PSQLException
@@ -22,6 +22,13 @@ class PublicApplication @Inject()(val database: DBService, implicit val webJarAs
 
   def index() = StackAction { implicit request =>
     Ok(views.html.index(loggedIn))
+  }
+
+  def accountList() = AsyncStack() { implicit request =>
+    database.runAsync(Tables.Account.sortBy(_.id).result).map { rowSeq =>
+      val accountSeq = rowSeq.map(Account(_))
+      Ok(views.html.accountList(loggedIn,accountSeq))
+    }
   }
 
   def signUp() = StackAction() { implicit request =>
