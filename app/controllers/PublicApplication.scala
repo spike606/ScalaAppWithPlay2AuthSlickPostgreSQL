@@ -31,6 +31,13 @@ class PublicApplication @Inject()(val database: DBService, implicit val webJarAs
     }
   }
 
+  def employeePage(id: Int) = AsyncStack { implicit request =>
+    database.runAsync(Tables.Account.filter(_.id === id).result).map { row =>
+      val employee = row.map(Account(_)).head
+      Ok(views.html.employeePage(loggedIn, employee))
+    }
+  }
+
   def signUp() = StackAction() { implicit request =>
     Ok(views.html.signup(loggedIn, FormData.addAccount))
   }

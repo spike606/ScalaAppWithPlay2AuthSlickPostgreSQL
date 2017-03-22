@@ -14,7 +14,9 @@
             <tbody>
                 @for(account <- accountSeq) {
                     <tr>
-                        <td>@account.data.name</td>
+                        @defining(account.id) { employeeId =>
+                            <td><a href="@routes.PublicApplication.employeePage(employeeId)">@account.data.name</a></td>
+                        }
                         <td>@account.data.email</td>
                     </tr>
                 }

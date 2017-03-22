@@ -1,0 +1,13 @@
+@(account: Option [Entity[Account]], employee:Entity[Account])(implicit webJarAssets: WebJarAssets)
+@_template(account) {
+    <div class="row column">
+        <h2>Employee page</h2>
+    </div>
+    <div class="row column">
+        <ul>
+            <li>@employee.data.name</li>
+            <li>@employee.data.email</li>
+            <li>@employee.data.role</li>
+        </ul>
+    </div>
+}

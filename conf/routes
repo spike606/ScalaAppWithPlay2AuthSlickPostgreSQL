@@ -5,7 +5,7 @@ GET     /                           controllers.PublicApplication.index()
 GET     /signup                     controllers.PublicApplication.signUp()
 POST    /signup                     controllers.PublicApplication.signUpAddAccount()
 GET		/accountList  			    controllers.PublicApplication.accountList()
-
+GET		/employeePage/:id 		    controllers.PublicApplication.employeePage(id:Int)
 
 GET		/login						controllers.Authentication.prepareLogin()
 POST	/login						controllers.Authentication.login()
