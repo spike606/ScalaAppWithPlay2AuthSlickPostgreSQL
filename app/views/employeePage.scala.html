@@ -1,4 +1,4 @@
-@(account: Option [Entity[Account]], employee:Entity[Account])(implicit webJarAssets: WebJarAssets)
+@(account: Option [Entity[Account]], employee:Entity[Account], messageSeq:Seq[Entity[Message]])(implicit webJarAssets: WebJarAssets)
 @_template(account) {
     <div class="row column">
         <h2>Employee page</h2>
@@ -10,4 +10,10 @@
             <li>@employee.data.role</li>
         </ul>
     </div>
+    @for(message <- messageSeq) {
+        <tr>
+            <td>@message.data.content</td>
+            <td>@message.data.tagSet.mkString(",")</td>
+        </tr>
+    }
 }

@@ -5,7 +5,7 @@ import javax.inject.{Inject, Singleton}
 
 import com.github.t3hnar.bcrypt.Password
 import models.db.{AccountRole, Tables}
-import models.{FormData, FormDataAccount, Account}
+import models.{Account, Entity, FormData, Message}
 import play.api.Logger
 import jp.t2v.lab.play2.auth._
 import org.postgresql.util.PSQLException
@@ -15,6 +15,7 @@ import utils.db.TetraoPostgresDriver.api._
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.util.{Success, Failure}
 
 @Singleton
 class PublicApplication @Inject()(val database: DBService, implicit val webJarAssets: WebJarAssets)
@@ -31,10 +32,15 @@ class PublicApplication @Inject()(val database: DBService, implicit val webJarAs
     }
   }
 
-  def employeePage(id: Int) = AsyncStack { implicit request =>
+  def employeePage(id: Int) = AsyncStack() { implicit request =>
+
     database.runAsync(Tables.Account.filter(_.id === id).result).map { row =>
-      val employee = row.map(Account(_)).head
-      Ok(views.html.employeePage(loggedIn, employee))
+      row.map(Account(_)).head
+    } flatMap {
+      account => database.runAsync(Tables.Message.filter(_.accountId === id).result).map { rowSeq =>
+        val messageSeq = rowSeq.map(Message(_))
+        Ok(views.html.employeePage(loggedIn, account, messageSeq))
+      }
     }
   }
 
