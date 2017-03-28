@@ -6,7 +6,7 @@ import models.db.{AccountRole, Tables}
 
 case class Entity[T](id:Int, data:T)
 
-case class Account(name: String, email: String, role: AccountRole.Value) {
+case class Account(name: String, surname: String, email: String, telephone: String, role: AccountRole.Value) {
   def isAdmin: Boolean = role == AccountRole.admin
 }
 
@@ -16,7 +16,9 @@ object Account {
       id = row.id,
       data = Account(
         name = row.name,
+        surname = row.surname,
         email = row.email,
+        telephone = row.telephone,
         role = row.role
       )
     )

@@ -98,7 +98,7 @@ class RestrictedApplication @Inject()(val database: DBService, implicit val webJ
 
 
   def account() = StackAction(AuthorityKey -> AccountRole.normal) { implicit request =>
-    val form = FormData.updateAccount.fill(FormDataAccount(loggedIn.data.name, loggedIn.data.email, "", ""))
+    val form = FormData.updateAccount.fill(FormDataAccount(loggedIn.data.name, loggedIn.data.surname, loggedIn.data.email, loggedIn.data.telephone, "", ""))
     Ok(views.html.account(loggedIn, form, insert = false))
   }
 
@@ -146,7 +146,9 @@ class RestrictedApplication @Inject()(val database: DBService, implicit val webJ
           val row = Tables.AccountRow(
             id = -1,
             name = accountFormData.name,
+            surname = accountFormData.surname,
             email = accountFormData.email,
+            telephone = accountFormData.telephone,
             password = accountFormData.password.bcrypt,
             role = AccountRole.normal,
             updatedAt = now,

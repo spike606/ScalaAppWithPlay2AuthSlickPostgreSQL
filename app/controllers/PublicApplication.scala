@@ -57,7 +57,9 @@ class PublicApplication @Inject()(val database: DBService, implicit val webJarAs
           val row = Tables.AccountRow(
             id = -1,
             name = accountFormData.name,
+            surname = accountFormData.surname,
             email = accountFormData.email,
+            telephone = accountFormData.telephone,
             password = accountFormData.password.bcrypt,
             role = AccountRole.normal,
             updatedAt = now,

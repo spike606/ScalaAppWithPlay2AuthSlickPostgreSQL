@@ -17,9 +17,25 @@
                 </label>
             </div>
             <div class="row column">
+                <label>Name
+                    <input type="text" name="surname" value="@accountForm("surname").value" placeholder="surname" required>
+                    @accountForm.error("surname").map { formError =>
+                        <span class="form-error is-visible">@formError.message</span>
+                    }
+                </label>
+            </div>
+            <div class="row column">
                 <label>Email
                     <input type="email" name="email" value="@accountForm("email").value" placeholder="email" required>
                     @accountForm.error("email").map { formError =>
+                        <span class="form-error is-visible">@formError.message</span>
+                    }
+                </label>
+            </div>
+            <div class="row column">
+                <label>Name
+                    <input type="text" name="telephone" value="@accountForm("telephone").value" placeholder="telephone" required>
+                    @accountForm.error("telephone").map { formError =>
                         <span class="form-error is-visible">@formError.message</span>
                     }
                 </label>
