@@ -1,6 +1,6 @@
 package models.db
 
-// AUTO-GENERATED Slick data model [2017-03-21T13:40:36.371+01:00[Europe/Berlin]]
+// AUTO-GENERATED Slick data model [2017-03-25T19:17:03.595+01:00[Europe/Berlin]]
 
 /** Stand-alone Slick data model for immediate use */
 object Tables extends {
@@ -60,38 +60,38 @@ trait Tables {
 
   /** Entity class storing rows of table Message
    *  @param id Database column id SqlType(serial), AutoInc, PrimaryKey
+   *  @param title Database column title SqlType(text)
    *  @param content Database column content SqlType(text)
-   *  @param tagList Database column tag_list SqlType(_text), Length(2147483647,false)
-   *  @param accountId Database column account_id SqlType(serial), AutoInc
+   *  @param accountId Database column account_id SqlType(int4), Default(None)
    *  @param createdAt Database column created_at SqlType(timestamptz)
    *  @param updatedAt Database column updated_at SqlType(timestamptz) */
-  case class MessageRow(id: Int, content: String, tagList: List[String], var accountId: Int, createdAt: java.time.OffsetDateTime, updatedAt: java.time.OffsetDateTime)
+  case class MessageRow(id: Int, title: String, content: String, accountId: Option[Int] = None, createdAt: java.time.OffsetDateTime, updatedAt: java.time.OffsetDateTime)
   /** GetResult implicit for fetching MessageRow objects using plain SQL queries */
-  implicit def GetResultMessageRow(implicit e0: GR[Int], e1: GR[String], e2: GR[List[String]], e3: GR[java.time.OffsetDateTime]): GR[MessageRow] = GR{
+  implicit def GetResultMessageRow(implicit e0: GR[Int], e1: GR[String], e2: GR[Option[Int]], e3: GR[java.time.OffsetDateTime]): GR[MessageRow] = GR{
     prs => import prs._
-    MessageRow.tupled((<<[Int], <<[String], <<[List[String]], <<[Int], <<[java.time.OffsetDateTime], <<[java.time.OffsetDateTime]))
+    MessageRow.tupled((<<[Int], <<[String], <<[String], <<?[Int], <<[java.time.OffsetDateTime], <<[java.time.OffsetDateTime]))
   }
   /** Table description of table message. Objects of this class serve as prototypes for rows in queries. */
   class Message(_tableTag: Tag) extends Table[MessageRow](_tableTag, "message") {
-    def * = (id, content, tagList, accountId, createdAt, updatedAt) <> (MessageRow.tupled, MessageRow.unapply)
+    def * = (id, title, content, accountId, createdAt, updatedAt) <> (MessageRow.tupled, MessageRow.unapply)
     /** Maps whole row to an option. Useful for outer joins. */
-    def ? = (Rep.Some(id), Rep.Some(content), Rep.Some(tagList), Rep.Some(accountId), Rep.Some(createdAt), Rep.Some(updatedAt)).shaped.<>({r=>import r._; _1.map(_=> MessageRow.tupled((_1.get, _2.get, _3.get, _4.get, _5.get, _6.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+    def ? = (Rep.Some(id), Rep.Some(title), Rep.Some(content), accountId, Rep.Some(createdAt), Rep.Some(updatedAt)).shaped.<>({r=>import r._; _1.map(_=> MessageRow.tupled((_1.get, _2.get, _3.get, _4, _5.get, _6.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
 
     /** Database column id SqlType(serial), AutoInc, PrimaryKey */
     val id: Rep[Int] = column[Int]("id", O.AutoInc, O.PrimaryKey)
+    /** Database column title SqlType(text) */
+    val title: Rep[String] = column[String]("title")
     /** Database column content SqlType(text) */
     val content: Rep[String] = column[String]("content")
-    /** Database column tag_list SqlType(_text), Length(2147483647,false) */
-    val tagList: Rep[List[String]] = column[List[String]]("tag_list", O.Length(2147483647,varying=false))
-    /** Database column account_id SqlType(serial), AutoInc */
-    val accountId: Rep[Int] = column[Int]("account_id", O.AutoInc)
+    /** Database column account_id SqlType(int4), Default(None) */
+    val accountId: Rep[Option[Int]] = column[Option[Int]]("account_id", O.Default(None))
     /** Database column created_at SqlType(timestamptz) */
     val createdAt: Rep[java.time.OffsetDateTime] = column[java.time.OffsetDateTime]("created_at")
     /** Database column updated_at SqlType(timestamptz) */
     val updatedAt: Rep[java.time.OffsetDateTime] = column[java.time.OffsetDateTime]("updated_at")
 
     /** Foreign key referencing Account (database name message_account_id_fkey) */
-    lazy val accountFk = foreignKey("message_account_id_fkey", accountId, Account)(r => r.id, onUpdate=ForeignKeyAction.NoAction, onDelete=ForeignKeyAction.NoAction)
+    lazy val accountFk = foreignKey("message_account_id_fkey", accountId, Account)(r => Rep.Some(r.id), onUpdate=ForeignKeyAction.NoAction, onDelete=ForeignKeyAction.NoAction)
   }
   /** Collection-like TableQuery object for table Message */
   lazy val Message = new TableQuery(tag => new Message(tag))

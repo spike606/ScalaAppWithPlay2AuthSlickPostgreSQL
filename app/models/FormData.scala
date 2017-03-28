@@ -10,6 +10,9 @@ case class FormDataLogin(email: String, password: String)
 
 case class FormDataAccount(name:String, email: String, password: String, passwordAgain:String)
 
+case class FormDataMessage(title: String, content: String)
+
+
 object FormData  {
 
   val login = Form(
@@ -19,12 +22,15 @@ object FormData  {
     )(FormDataLogin.apply)(FormDataLogin.unapply)
   )
 
-  val addMessage = Form(
+  private[this] def messageForm(messageMapping: Mapping[String]) = Form(
     mapping(
-      "content" -> nonEmptyText,
-      "tags" -> text
-    )(Message.formApply)(Message.formUnapply)
+      "title" -> nonEmptyText,
+      "content" -> text
+    )(FormDataMessage.apply)(FormDataMessage.unapply)
   )
+  val addMessage = messageForm(text)
+  val updateMessage = messageForm(text)
+
   val atLeastOneUpperLetterAndAtLeasOneSpecialChar = """(?=.*[A-Z])(?=.*[@#$%^&+=]).*"""
 
   private[this] def accountForm(passwordMapping:Mapping[String]) = Form(
@@ -36,7 +42,10 @@ object FormData  {
     )(FormDataAccount.apply)(FormDataAccount.unapply)
   )
 
-  val updateAccount = accountForm(text)
+  val updateAccount = accountForm(text
+    .verifying("Password must have from 5 to 10 chars", text => text.length() >= 5 && text.length() <= 10 && !text.contains("\\s"))
+    .verifying("Password must have at least one special char (@#$%^&+=) and one uppercase letter",
+      name => name.matches(atLeastOneUpperLetterAndAtLeasOneSpecialChar)))
 
   val addAccount = accountForm(text
     .verifying("Password must have from 5 to 10 chars", text => text.length() >= 5 && text.length() <= 10 && !text.contains("\\s"))

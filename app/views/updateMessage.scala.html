@@ -1,0 +1,41 @@
+@(account: Entity[Account], messageForm:Form[FormDataMessage], messageId: Int)(implicit webJarAssets: WebJarAssets)
+@_template(Some(account)) {
+    @defining(
+        "Update Message", routes.RestrictedApplication.updateMessage(messageId), "Update"
+    ) { case (h2Title, formURL, submitLabel) =>
+    <div class="row column">
+        <h2>@h2Title</h2>
+    </div>
+    <form method="post" action="@formURL">
+        <div class="row column">
+            <label>Title
+                <input type="text" name="title" value="@messageForm("title").value" placeholder="title" required>
+                @messageForm.error("title").map { formError =>
+                    <span class="form-error is-visible">@formError.message</span>
+                }
+            </label>
+        </div>
+        <div class="row column">
+            <label>Content
+                <input type="text" name="content" value="@messageForm("content").value" placeholder="content" required>
+                @messageForm.error("content").map { formError =>
+                    <span class="form-error is-visible">@formError.message</span>
+                }
+            </label>
+        </div>
+
+        <div class="row">
+            <div class="large-6 medium-10 small-12 large-centered medium-centered columns">
+                <div class="row">
+                    <div class="small-6 columns">
+                        <button type="submit" class="button expanded success">@submitLabel</button>
+                    </div>
+                    <div class="small-6 columns">
+                        <a href="@routes.RestrictedApplication.messages()" class="button expanded secondary">Cancel</a>
+    </div>
+    </div>
+    </div>
+    </div>
+    </form>
+    }
+}

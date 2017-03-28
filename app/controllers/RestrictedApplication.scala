@@ -5,8 +5,9 @@ import javax.inject.{Inject, Singleton}
 
 import com.github.t3hnar.bcrypt.Password
 import jp.t2v.lab.play2.auth.AuthElement
+import models.db.Tables.MessageRow
 import models.db.{AccountRole, Tables}
-import models.{FormData, FormDataAccount, Message}
+import models.{FormData, FormDataAccount, FormDataMessage, Message}
 import play.api.Logger
 import play.api.mvc.Controller
 import services.db.DBService
@@ -26,6 +27,37 @@ class RestrictedApplication @Inject()(val database: DBService, implicit val webJ
     }
   }
 
+  def message(id:Int) = AsyncStack(AuthorityKey -> AccountRole.normal) { implicit request =>
+    database.runAsync(Tables.Message.filter(_.id === id).filter(_.accountId === loggedIn.id).result).map { row =>
+      if(row.nonEmpty){
+        val message = row.map(Message(_)).head
+        val form = FormData.updateMessage.fill(FormDataMessage(message.data.title, message.data.content))
+        Ok(views.html.updateMessage(loggedIn, form, id))
+      }
+      else{
+        Redirect(routes.PublicApplication.index())
+      }
+    }
+  }
+
+
+  def updateMessage(id:Int) = AsyncStack(AuthorityKey -> AccountRole.normal) { implicit request =>
+    FormData.updateMessage.bindFromRequest.fold(
+      formWithErrors => Future.successful(BadRequest(views.html.updateMessage(loggedIn, formWithErrors, id))),
+      messageFormData => {
+        val now = OffsetDateTime.now()
+        val update = {
+          val q = for {
+            row <- Tables.Message.filter(_.id === id).filter(_.accountId === loggedIn.id)
+          } yield (row.title, row.content)
+          q.update(messageFormData.title, messageFormData.content)
+        }
+        database.runAsync(update)
+        Future(Redirect(routes.RestrictedApplication.messages()))
+      }
+    )
+  }
+
   def deleteMessage(id:Int) = AsyncStack(AuthorityKey -> AccountRole.normal) { implicit request =>
     database.runAsync(Tables.Message.filter(_.id === id).delete).map {_ =>
       Logger.info(s"Deleted message#$id by ${loggedIn.data.email}" )
@@ -36,18 +68,25 @@ class RestrictedApplication @Inject()(val database: DBService, implicit val webJ
   def addMessage() = AsyncStack(AuthorityKey -> AccountRole.normal) { implicit request =>
     FormData.addMessage.bindFromRequest.fold(
       formWithErrors => Future.successful(Redirect(routes.RestrictedApplication.messages())),
-      message => {
-        database.runAsync((Tables.Message returning Tables.Message.map(_.id)) += message.toRow()).map { id =>
-
+      messageFormData => {
+        val now = OffsetDateTime.now()
+        val row = Tables.MessageRow(
+          id = -1,
+          title = messageFormData.title,
+          content = messageFormData.content,
+          updatedAt = now,
+          createdAt = now
+        )
+        database.runAsync((Tables.Message returning Tables.Message.map(_.id)) += row).map { id =>
           val update = {
             val q = for {
               row <- Tables.Message if row.id === id
             } yield (row.accountId)
-            q.update(loggedIn.id)
+            q.update(Option(loggedIn.id))
           }
 
           database.runAsync(update).map { _ =>
-            Logger.info("Updated accounId")
+            Logger.info("Updated accountId")
           }
 
           Logger.info(s"Inserted message#$id by ${loggedIn.data.email} wirh id ${loggedIn.id}")
@@ -56,6 +95,7 @@ class RestrictedApplication @Inject()(val database: DBService, implicit val webJ
       }
     )
   }
+
 
   def account() = StackAction(AuthorityKey -> AccountRole.normal) { implicit request =>
     val form = FormData.updateAccount.fill(FormDataAccount(loggedIn.data.name, loggedIn.data.email, "", ""))

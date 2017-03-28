@@ -65,7 +65,7 @@ private[controllers] trait AuthConfigTrait extends AuthConfig {
     * Where to redirect the user after a successful login.
     */
   def loginSucceeded(request: RequestHeader)(implicit ctx: ExecutionContext): Future[Result] = {
-    Future.successful(Redirect(routes.RestrictedApplication.messages()))
+    Future.successful(Redirect(routes.PublicApplication.index()))
   }
 
   /**
@@ -116,7 +116,7 @@ class Authentication @Inject()(val database: DBService, implicit val webJarAsset
 
   def prepareLogin() = StackAction { implicit request =>
     if (loggedIn.isDefined) {
-      Redirect(routes.RestrictedApplication.messages())
+      Redirect(routes.PublicApplication.index())
     } else {
       Ok(views.html.login(FormData.login))
     }

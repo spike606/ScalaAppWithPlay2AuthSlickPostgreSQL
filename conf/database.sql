@@ -22,8 +22,8 @@ CREATE TABLE account (
 
 CREATE TABLE message (
     id serial PRIMARY KEY,
+    title text NOT NULL,
     content text NOT NULL,
-    tag_list text[] NOT NULL,
     account_id int REFERENCES account(id),
     created_at timestamp with time zone not null default now(),
     updated_at timestamp with time zone not null default now()
@@ -35,5 +35,5 @@ GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO templatesite_user;
 -- bcrypted password values are password in both users
 INSERT INTO account (name, email, role, password) values ('Admin User', 'admin@tetrao.eu', 'admin', '$2a$10$8K1p/a0dL1LXMIgoEDFrwOfMQbLgtnOoKsWc.6U6H0llP3puzeeEu');
 INSERT INTO account (name, email, role, password) values ('Bob Minion', 'bob@tetrao.eu', 'normal', '$2a$10$8K1p/a0dL1LXMIgoEDFrwOfMQbLgtnOoKsWc.6U6H0llP3puzeeEu');
-INSERT INTO message (content, tag_list, account_id) values ('Admin message', '{"welcome", "first message", "english"}', 1);
-INSERT INTO message (content, tag_list, account_id) values ('User message', '{"welcome", "first message", "english"}', 2);
+INSERT INTO message (title, content, account_id) values ('Admin message', 'welcome', 1);
+INSERT INTO message (title, content, account_id) values ('User message', 'welcome', 2);

@@ -23,14 +23,13 @@ object Account {
   }
 }
 
-case class Message(content:String, tagSet:Set[String], accountId: Int) {
+case class Message(title:String, content:String) {
   def toRow() = {
     val now = OffsetDateTime.now()
     Tables.MessageRow(
       id = -1,
+      title = title,
       content = content,
-      tagList = tagSet.toList,
-      accountId = accountId,
       createdAt = now,
       updatedAt = now
     )
@@ -42,23 +41,21 @@ object Message {
     Entity(
       id = row.id,
       data = Message(
-        content = row.content,
-        tagSet = row.tagList.toSet,
-        accountId = row.accountId
+        title = row.title,
+        content = row.content
       )
     )
   }
 
-  def formApply(content:String, tags:String):Message = {
+  def formApply(title:String, content:String):Message = {
     Message(
-      content = content.trim,
-      tagSet = tags.split(",").map(_.trim).filterNot(_.isEmpty).toSet,
-      accountId = -1
+      title = title.trim,
+      content = content.trim
     )
   }
 
   def formUnapply(m:Message):Option[(String, String)] = {
-    Some((m.content, m.tagSet.mkString(",")))
+    Some((m.title, m.content))
   }
 }
 

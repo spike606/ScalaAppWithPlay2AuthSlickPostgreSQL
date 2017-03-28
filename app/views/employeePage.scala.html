@@ -12,8 +12,8 @@
     </div>
     @for(message <- messageSeq) {
         <tr>
+            <td>@message.data.title</td>
             <td>@message.data.content</td>
-            <td>@message.data.tagSet.mkString(",")</td>
         </tr>
     }
 }
