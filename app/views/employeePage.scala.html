@@ -3,6 +3,10 @@
     <div class="row column">
         <h2>Employee page</h2>
     </div>
+
+    <div class="head">
+        <span class="typ"> <strong>Employee's details</strong></span>
+    </div>
     <div class="row column">
         <ul>
             <li>@employee.data.name</li>
@@ -11,10 +15,13 @@
             <li>@employee.data.telephone</li>
         </ul>
     </div>
+    <div class="head">
+        <span> <strong>Employee's messages</strong></span>
+    </div>
     @for(message <- messageSeq) {
-        <tr>
-            <td>@message.data.title</td>
-            <td>@message.data.content</td>
-        </tr>
+        <ul>
+            <li><strong>@message.data.title</strong></li>
+            <p>@message.data.content</p>
+        </ul>
     }
 }

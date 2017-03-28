@@ -1,14 +1,14 @@
 @(account: Entity[Account], messageSeq:Seq[Entity[Message]], messageForm:Form[FormDataMessage])(implicit webJarAssets: WebJarAssets)
 @_template(Some(account)) {
     <div class="row column">
-        <h2>Messages</h2>
+        <h2>My messages</h2>
     </div>
     <div class="row column">
         <table class="stack">
             <thead>
                 <tr>
-                    <th width="60%">Title</th>
-                    <th>Content</th>
+                    <th>Title</th>
+                    <th width="60%">Content</th>
                     <th width="100">Actions</th>
                 </tr>
             </thead>

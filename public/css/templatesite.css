@@ -1,11 +1,11 @@
 li.menu-text a {
     padding: 0;
     font-size: 120%;
-    color: #444444;
+    color: #e6e6e6;
 }
 
 li.menu-text a:hover {
-    color: #1585cf;
+    color: #ffffff;
 }
 
 #header {
@@ -32,6 +32,36 @@ Copied from https://css-tricks.com/snippets/css/sticky-footer/
 
 #footer {
     border-top: #444444 solid 1px;
-    background-color: #e6e6e6;
+    background-color: #8D0001;
     padding-top: 8px;
+}
+#footerText{
+    color: #e6e6e6;
+    text-align: center;
+}
+/* */
+body{
+    background: url(../img/bg_pattern.png) repeat center center fixed;
+}
+.button.success {
+    background-color: #7B0102;
+    color: #fefefe; }
+.button.success:hover, .button.success:focus {
+    background-color: #A20003;
+    color: #fefefe; }
+
+.button.alert {
+    background-color: #7B0102;
+    color: #fefefe; }
+.button.alert:hover, .button.alert:focus {
+    background-color: #A20003;
+    color: #fefefe; }
+
+.top-bar, .top-bar ul {
+    background-color: #8D0001;
+}
+.head {
+    background: url("../img/content_h1_bg.png") repeat right center;
+    height: auto;
+    margin-bottom: 2%;
 }

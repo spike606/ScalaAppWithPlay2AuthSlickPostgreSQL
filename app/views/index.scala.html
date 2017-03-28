@@ -1,42 +1,36 @@
 @(account: Option[Entity[Account]])(implicit webJarAssets: WebJarAssets)
 @_template(account) {
     <div class="row column">
-        <h1>Welcome to the Template Site!</h1>
+        <h1>Department of Microelectronics and Computer Science</h1>
         <p>
-            The <a href="https://github.com/tetrao-eu/templatesite">Template Site</a> is a project created by
-            <a href="https://tetrao.eu">Tetrao</a>, a technology startup company specialized in Internet intelligent
-            process automation. Our mission is enabling connections between people and businesses radically
-            faster in an efficient and cost-effective way.
+            The Department of Microelectronics and Computer Science (DMCS), headed by Prof. Andrzej Napieralski,
+            was founded in May 1996. The members of the department staff give lectures and run laboratory courses
+            at the Faculty of Electrical, Electronic, Computer and Control Engineering and the International
+            Faculty of Engineering, in Polish, French, and English. The Department cooperates with a wide range of
+            research organizations and academia from all round the world. This international cooperation is
+            constantly strengthened thanks to the <a href="https://www.mixdes.org/Mixdes3/">MIXDES</a>
+                conference which is organized by DMCS annually starting from 1994.
         </p>
     </div>
     <div class="row">
         <div class="medium-6 columns">
             <a href="https://pixabay.com/photo-1417278/">
-                <img class="thumbnail" src="@routes.Assets.at("img/cat-1417278_1280.jpg")" alt="a cat" />
+                <img class="thumbnail" src="@routes.Assets.at("img/index3.jpg")" alt="a cat" />
             </a>
         </div>
         <div class="medium-6 columns">
             <p>
-                This is an internal project that we decided to publish it to promote the use of a lot of open source
-                projects we love and we use every day and make our job more easy.
-            </p>
-            <p>
-                <strong>Template Site</strong> is an skeleton of a web application based on:
-            </p>
-            <ul>
-                <li><a href="http://www.scala-lang.org/">Scala as programming language</a></li>
-                <li><a href="http://www.scala-sbt.org/">SBT as build tool</a></li>
-                <li><a href="https://www.playframework.com/">Play Framework as web application framework</a></li>
-                <li><a href="https://github.com/t2v/play2-auth/">Play2-auth as authentication module for Play</a></li>
-                <li><a href="http://www.postgresql.org">PostgreSQL as database</a></li>
-                <li><a href="http://slick.lightbend.com">Slick as database access layer</a></li>
-                <li><a href="https://github.com/tminglei/slick-pg">
-                    Slick-pg extending slick for support PostgreSQL data types</a></li>
-                <li><a href="http://foundation.zurb.com/">Foundation as front-end framework</a></li>
-            </ul>
-            <p>
-                Check the <code>build.sbt</code> file to get the different versions used. Our intention is to keep
-                updated this project as new versions of this software are published.
+                Several research projects funded by the European Union are realized in the Department.
+                Between 1991 and 2007, 10 Tempus and Copernicus projects were successfully concluded,
+                as well as one sponsored by NATO. Moreover, since 1994 the Department took part in the international
+                project BARMINT realized within the EU research programme Esprit. From 2001 to 2008 two projects
+                within the EU 5th Framework Programme (<a href="http://sewing.dmcs.pl/">SEWING</a> and
+                    <a href="http://reason.imio.pw.edu.pl/">REASON</a>) and one within the 6th Framework
+                (<a href="http://desy.dmcs.p.lodz.pl/">CARE</a>). Currently another 6th Framework project
+                    (<a href="http://www.perplexus.org/">PERPLEXUS</a>) is approaching the end. The new
+                7th Framework project (<a href="http://edumems.dmcs.pl/">EduMEMS</a>) has just started.
+                    A large number of publications at international and national conferences as well as
+                    papers published in renowned scientific journals result from research activities in many areas.
             </p>
         </div>
     </div>
